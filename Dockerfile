@@ -19,6 +19,7 @@ RUN cd atomicDEX-API && /bin/bash -c "source $HOME/.cargo/env && cargo build --f
 #RUN rustup component add rustfmt-preview
 
 FROM ubuntu:18.04
+ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
   apt-get install -y git jq wget curl nano openssh-server ngrep tmux net-tools 
 #RUN git clone https://github.com/KomodoPlatform/atomicDEX-API --branch mm2 --single-branch 
@@ -27,7 +28,7 @@ RUN cd /usr/local/bin && wget https://raw.githubusercontent.com/jl777/coins/mast
 COPY --from=build /atomicDEX-API/target/debug/mm2 /usr/local/bin
 COPY /scripts/* /usr/local/bin/
 COPY entrypoint.sh /usr/local/bin/
-RUN apt-get update && apt-get install -y build-essential gcc-8 g++-8 libcurl4-gnutls-dev curl
+RUN apt-get update && apt-get install -y build-essential gcc-8 g++-8 libcurl4-gnutls-dev curl build-essential pkg-config libc6-dev m4 g++-multilib autoconf libtool libncurses-dev unzip git python zlib1g-dev wget bsdmainutils automake libboost-all-dev libssl-dev libprotobuf-dev protobuf-compiler libgtest-dev libqt4-dev libqrencode-dev libevent-dev libdb++-dev ntp ntpdate software-properties-common curl libcurl4-gnutls-dev cmake clang libsodium-dev jq htop tmux
 RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 800 --slave /usr/bin/g++ g++ /usr/bin/g++-8
 RUN wget https://github.com/Kitware/CMake/releases/download/v3.15.3/cmake-3.15.3.tar.gz && \
   tar zxvf cmake-3.15.3.tar.gz && \
@@ -39,9 +40,7 @@ RUN wget https://github.com/Kitware/CMake/releases/download/v3.15.3/cmake-3.15.3
 RUN git clone https://github.com/KomodoPlatform/antara-makerbot.git && \
   cd antara-makerbot/ && \
   mkdir build && \
-  cd build/ 
-#&& \
-#  cmake -DCMAKE_BUILD_TYPE=Release ../ 
-# && \
-#  cmake --build . --target mmbot --config Release 
+  cd build/ && \
+  cmake -DCMAKE_BUILD_TYPE=Release ../  && \
+  cmake --build . --target mmbot --config Release 
 CMD ["/usr/local/bin/entrypoint.sh"] 
