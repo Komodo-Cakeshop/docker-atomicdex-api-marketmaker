@@ -16,5 +16,6 @@ echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
 IPADDRESS=`ifconfig | grep inet | grep -v 127 | awk -F ' ' '{print $2}'`
 echo "The root password is root"
 echo "Tunnel to marketmaker with ssh"
-echo "ssh -g -L 7783:localhost:7783 -f -N root@${IPADDRESS}"
+echo "mm2: ssh -g -L 7783:localhost:7783 -f -N root@${IPADDRESS}"
+echo "makerbot: ssh -g -L 7777:localhost:7777 -f -N root@${IPADDRESS}"
 /bin/bash
